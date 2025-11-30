@@ -1,6 +1,6 @@
 "use client"
 
-import { MessageCircle, XCircle, Clock, MapPin } from "lucide-react"
+import { MessageCircle, XCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { StatusBanner } from "@/components/ui/status-banner"
 import type { Alarm, AlarmType } from "@/lib/types"
@@ -22,34 +22,17 @@ const typeLabels: Record<AlarmType, string> = {
 }
 
 export function ActiveAlarmCard({ alarm, onOpenChat, onCancel, className }: ActiveAlarmCardProps) {
-  const createdTime = alarm.createdAt.toLocaleTimeString("es-ES", {
-    hour: "2-digit",
-    minute: "2-digit",
-  })
-
   return (
-    <div className={cn("bg-card rounded-2xl border-2 border-destructive shadow-lg overflow-hidden", className)}>
-      <div className="p-4 space-y-4">
+    <div className={cn("bg-card rounded-xl border border-destructive shadow-md overflow-hidden", className)}>
+      <div className="p-4 space-y-3">
         <div className="flex items-start justify-between gap-3">
-          <div className="space-y-1">
+          <div className="space-y-2">
             <h3 className="font-bold text-lg text-foreground">{typeLabels[alarm.type]}</h3>
             <StatusBanner status={alarm.status} className="inline-flex" />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Clock className="h-4 w-4" />
-            <span>Enviada a las {createdTime}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4" />
-            <span className="truncate">{alarm.location}</span>
-          </div>
-          {alarm.note && <p className="text-sm text-muted-foreground bg-secondary p-2 rounded-lg">"{alarm.note}"</p>}
-        </div>
-
-        <p className="text-sm text-primary font-medium">Estamos avisando al municipio. Mantén la calma.</p>
+        <p className="text-sm text-primary font-medium">Las autoridades ya fueron notificadas y están en camino.</p>
 
         <div className="flex gap-3">
           <Button onClick={onOpenChat} className="flex-1 h-12 bg-primary hover:bg-primary/90">

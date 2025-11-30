@@ -1,80 +1,47 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Force dark mode only - removed light mode and custom-variant */
 
-/* Brand-driven dark theme: tweak --brand-accent or set data-brand on <body> */
+.dark,
 :root {
-  --layer-950: oklch(0.11 0.02 260);
-  --layer-900: oklch(0.16 0.018 260);
-  --layer-800: oklch(0.22 0.014 260);
-
-  --brand-accent: oklch(0.63 0.19 256.2);
-  --brand-accent-strong: color-mix(in oklab, var(--brand-accent) 82%, black);
-  --brand-accent-soft: color-mix(in oklab, var(--brand-accent) 18%, white);
-  --brand-accent-foreground: color-mix(in oklab, var(--brand-accent) 12%, white);
-  --brand-muted: color-mix(in oklab, var(--brand-accent) 10%, var(--layer-800));
-  --brand-muted-foreground: color-mix(in oklab, var(--brand-accent) 35%, oklch(0.86 0.008 250));
-  --brand-surface: color-mix(in oklab, var(--brand-accent) 10%, var(--layer-900));
-
-  --background: var(--layer-950);
-  --foreground: oklch(0.98 0.008 255);
-  --card: color-mix(in oklab, var(--layer-900) 88%, var(--brand-accent) 12%);
-  --card-foreground: var(--foreground);
-  --popover: color-mix(in oklab, var(--layer-900) 92%, var(--brand-accent) 8%);
-  --popover-foreground: var(--foreground);
-  --primary: var(--brand-accent-strong);
-  --primary-foreground: var(--brand-accent-foreground);
-  --secondary: color-mix(in oklab, var(--brand-muted) 75%, var(--layer-900) 25%);
-  --secondary-foreground: var(--foreground);
-  --muted: color-mix(in oklab, var(--brand-muted) 60%, var(--layer-900) 40%);
-  --muted-foreground: color-mix(in oklab, var(--brand-accent) 32%, oklch(0.83 0.01 260));
-  --accent: var(--brand-accent-soft);
-  --accent-foreground: color-mix(in oklab, var(--brand-accent) 78%, black);
+  --background: oklch(0.12 0.02 250);
+  --foreground: oklch(0.95 0.005 250);
+  --card: oklch(0.16 0.02 250);
+  --card-foreground: oklch(0.95 0.005 250);
+  --popover: oklch(0.16 0.02 250);
+  --popover-foreground: oklch(0.95 0.005 250);
+  --primary: oklch(0.6 0.18 250);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.22 0.02 250);
+  --secondary-foreground: oklch(0.95 0.005 250);
+  --muted: oklch(0.22 0.02 250);
+  --muted-foreground: oklch(0.65 0.02 250);
+  --accent: oklch(0.22 0.02 250);
+  --accent-foreground: oklch(0.95 0.005 250);
   --destructive: oklch(0.6 0.25 25);
   --destructive-foreground: oklch(0.99 0 0);
-  --success: oklch(0.63 0.17 145);
-  --success-foreground: oklch(0.14 0.02 145);
-  --warning: oklch(0.75 0.16 75);
-  --warning-foreground: oklch(0.18 0.02 75);
-  --border: color-mix(in oklab, var(--layer-900) 80%, white 20%);
-  --input: color-mix(in oklab, var(--layer-900) 76%, white 24%);
-  --ring: var(--brand-accent);
-  --chart-1: color-mix(in oklab, var(--brand-accent) 72%, oklch(0.64 0.2 30));
-  --chart-2: oklch(0.67 0.16 180);
-  --chart-3: oklch(0.52 0.14 110);
-  --chart-4: oklch(0.64 0.19 305);
-  --chart-5: oklch(0.68 0.17 25);
+  --success: oklch(0.6 0.18 145);
+  --success-foreground: oklch(0.99 0 0);
+  --warning: oklch(0.75 0.18 65);
+  --warning-foreground: oklch(0.15 0.02 65);
+  --border: oklch(0.26 0.02 250);
+  --input: oklch(0.22 0.02 250);
+  --ring: oklch(0.6 0.18 250);
+  --chart-1: oklch(0.6 0.25 25);
+  --chart-2: oklch(0.75 0.18 65);
+  --chart-3: oklch(0.6 0.18 145);
+  --chart-4: oklch(0.6 0.18 250);
+  --chart-5: oklch(0.65 0.15 300);
+  --sidebar: oklch(0.16 0.02 250);
+  --sidebar-foreground: oklch(0.95 0.005 250);
+  --sidebar-primary: oklch(0.6 0.18 250);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.22 0.02 250);
+  --sidebar-accent-foreground: oklch(0.95 0.005 250);
+  --sidebar-border: oklch(0.26 0.02 250);
+  --sidebar-ring: oklch(0.6 0.18 250);
   --radius: 0.75rem;
-  --sidebar: color-mix(in oklab, var(--layer-900) 90%, var(--brand-accent) 10%);
-  --sidebar-foreground: var(--foreground);
-  --sidebar-primary: var(--brand-accent);
-  --sidebar-primary-foreground: var(--brand-accent-foreground);
-  --sidebar-accent: var(--brand-accent-soft);
-  --sidebar-accent-foreground: color-mix(in oklab, var(--brand-accent) 72%, black);
-  --sidebar-border: var(--border);
-  --sidebar-ring: var(--ring);
-}
-
-/* Presets: set data-brand on <body> or override --brand-accent inline for bespoke clients */
-[data-brand="civic"] {
-  --brand-accent: oklch(0.63 0.19 256.2);
-}
-
-[data-brand="forest"] {
-  --brand-accent: oklch(0.65 0.19 155.1);
-}
-
-[data-brand="sunrise"] {
-  --brand-accent: oklch(0.72 0.21 57.2);
-}
-
-[data-brand="ember"] {
-  --brand-accent: oklch(0.6 0.22 28);
-}
-
-.dark {
-  color-scheme: dark;
 }
 
 @theme inline {
@@ -127,7 +94,6 @@
     @apply border-border outline-ring/50;
   }
   body {
-    color-scheme: dark;
     @apply bg-background text-foreground;
   }
 }

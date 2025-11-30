@@ -52,6 +52,23 @@ const mockInvitations: Invitation[] = [
   },
 ]
 
+const mockPendingReceivedInvitations: Invitation[] = [
+  {
+    id: "recv-1",
+    name: "Juan Pérez",
+    email: "juan@email.com",
+    status: "pendiente",
+    sentAt: new Date(Date.now() - 3600000),
+  },
+  {
+    id: "recv-2",
+    name: "Sofia Rodríguez",
+    email: "sofia@email.com",
+    status: "pendiente",
+    sentAt: new Date(Date.now() - 7200000),
+  },
+]
+
 // Mock data for alarm history
 const mockAlarmHistory: (Alarm & { ownerName?: string })[] = [
   {
@@ -98,10 +115,10 @@ const alarmTypeIcons: Record<string, string> = {
   otro: "⚠️",
 }
 
-type TabType = "contactos" | "historial"
+type TabType = "invitaciones" | "contactos" | "historial"
 
 export default function RedPage() {
-  const [activeTab, setActiveTab] = useState<TabType>("contactos")
+  const [activeTab, setActiveTab] = useState<TabType>("invitaciones")
   const [members, setMembers] = useState<FamilyMember[]>(mockMembers)
   const [invitations, setInvitations] = useState<Invitation[]>(mockInvitations)
   const [showInviteModal, setShowInviteModal] = useState(false)
@@ -158,11 +175,26 @@ export default function RedPage() {
 
       {/* Tab switcher */}
       <div className="sticky top-11 z-30 bg-background border-b border-border">
-        <div className="flex max-w-lg mx-auto">
+        <div className="flex max-w-lg mx-auto overflow-x-auto">
+          <button
+            onClick={() => setActiveTab("invitaciones")}
+            className={cn(
+              "flex items-center justify-center gap-2 py-3 px-4 text-sm font-medium transition-colors border-b-2 whitespace-nowrap",
+              activeTab === "invitaciones"
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground",
+            )}
+          >
+            <UserPlus className="h-4 w-4" />
+            Invitaciones
+            {invitations.some((i) => i.status === "pendiente") && (
+              <span className="inline-block h-2 w-2 bg-destructive rounded-full ml-1" />
+            )}
+          </button>
           <button
             onClick={() => setActiveTab("contactos")}
             className={cn(
-              "flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors border-b-2",
+              "flex items-center justify-center gap-2 py-3 px-4 text-sm font-medium transition-colors border-b-2 whitespace-nowrap",
               activeTab === "contactos"
                 ? "border-primary text-primary"
                 : "border-transparent text-muted-foreground hover:text-foreground",
@@ -174,7 +206,7 @@ export default function RedPage() {
           <button
             onClick={() => setActiveTab("historial")}
             className={cn(
-              "flex-1 flex items-center justify-center gap-2 py-3 text-sm font-medium transition-colors border-b-2",
+              "flex items-center justify-center gap-2 py-3 px-4 text-sm font-medium transition-colors border-b-2 whitespace-nowrap",
               activeTab === "historial"
                 ? "border-primary text-primary"
                 : "border-transparent text-muted-foreground hover:text-foreground",
@@ -187,7 +219,130 @@ export default function RedPage() {
       </div>
 
       <main className="px-4 py-5 space-y-5 max-w-lg mx-auto">
-        {activeTab === "contactos" ? (
+        {activeTab === "invitaciones" ? (
+          <>
+            {/* Info section */}
+            <section className="bg-primary/10 border border-primary/20 rounded-xl p-4">
+              <h2 className="font-semibold text-foreground mb-1">Invitaciones recibidas</h2>
+              <p className="text-sm text-muted-foreground">
+                Acepta invitaciones de familiares o amigos para que puedan ver tus alarmas.
+              </p>
+            </section>
+
+            {mockPendingReceivedInvitations.length === 0 ? (
+              <div className="bg-card border border-border rounded-xl p-6 text-center">
+                <UserPlus className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+                <p className="text-muted-foreground text-sm">No tienes invitaciones pendientes.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {mockPendingReceivedInvitations.map((invitation) => (
+                  <div key={invitation.id} className="bg-card border border-primary/30 rounded-xl p-4">
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="h-11 w-11 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold">
+                        {invitation.name.charAt(0)}
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-foreground">{invitation.name}</p>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                          <Mail className="h-3 w-3" />
+                          <span>{invitation.email}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="default"
+                        className="flex-1"
+                        onClick={() => console.log("Aceptar invitación", invitation.id)}
+                      >
+                        <Check className="h-3.5 w-3.5 mr-1" />
+                        Aceptar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex-1 bg-transparent"
+                        onClick={() => console.log("Rechazar invitación", invitation.id)}
+                      >
+                        <X className="h-3.5 w-3.5 mr-1" />
+                        Rechazar
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Sent invitations section */}
+            {invitations.length > 0 && (
+              <section className="mt-8">
+                <h3 className="font-semibold text-foreground mb-3">Invitaciones que enviaste</h3>
+                <div className="space-y-2">
+                  {invitations.map((invitation) => (
+                    <div key={invitation.id} className="bg-card border border-border rounded-xl p-4">
+                      <div className="flex items-start gap-3">
+                        <div className="h-11 w-11 rounded-full bg-secondary flex items-center justify-center text-muted-foreground font-semibold">
+                          {invitation.name.charAt(0)}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-foreground truncate">{invitation.name}</p>
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
+                            <Mail className="h-3 w-3" />
+                            <span className="truncate">{invitation.email}</span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-2">
+                            {invitation.status === "pendiente" && (
+                              <span className="inline-flex items-center gap-1 bg-warning/20 text-warning text-[10px] font-medium px-2 py-0.5 rounded">
+                                <Clock className="h-3 w-3" />
+                                Pendiente
+                              </span>
+                            )}
+                            {invitation.status === "rechazada" && (
+                              <span className="inline-flex items-center gap-1 bg-destructive/20 text-destructive text-[10px] font-medium px-2 py-0.5 rounded">
+                                <X className="h-3 w-3" />
+                                Rechazada
+                              </span>
+                            )}
+                            {invitation.status === "aceptada" && (
+                              <span className="inline-flex items-center gap-1 bg-success/20 text-success text-[10px] font-medium px-2 py-0.5 rounded">
+                                <Check className="h-3 w-3" />
+                                Aceptada
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button className="p-2 rounded-full hover:bg-secondary transition-colors">
+                              <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            {invitation.status !== "aceptada" && (
+                              <DropdownMenuItem onClick={() => console.log("Reenviar", invitation.id)}>
+                                <Send className="h-4 w-4 mr-2" />
+                                Reenviar
+                              </DropdownMenuItem>
+                            )}
+                            <DropdownMenuItem
+                              onClick={() => console.log("Eliminar", invitation.id)}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Eliminar
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+          </>
+        ) : activeTab === "contactos" ? (
           <>
             {/* Info section */}
             <section className="bg-primary/10 border border-primary/20 rounded-xl p-4">
@@ -301,13 +456,13 @@ export default function RedPage() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             {invitation.status !== "aceptada" && (
-                              <DropdownMenuItem onClick={() => handleResendInvitation(invitation.id)}>
+                              <DropdownMenuItem onClick={() => console.log("Reenviar", invitation.id)}>
                                 <Send className="h-4 w-4 mr-2" />
                                 Reenviar
                               </DropdownMenuItem>
                             )}
                             <DropdownMenuItem
-                              onClick={() => handleCancelInvitation(invitation.id)}
+                              onClick={() => console.log("Eliminar", invitation.id)}
                               className="text-destructive"
                             >
                               <Trash2 className="h-4 w-4 mr-2" />

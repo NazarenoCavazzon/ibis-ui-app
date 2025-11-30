@@ -1,15 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { AlarmButton } from "@/components/ui/alarm-button"
-import { LocationBadge } from "@/components/ui/location-badge"
 import { ActiveAlarmCard } from "@/components/alarm/active-alarm-card"
 import { AlarmConfirmationModal } from "@/components/alarm/alarm-confirmation-modal"
 import { BottomNav } from "@/components/navigation/bottom-nav"
-import Link from "next/link"
-import { Bell } from "lucide-react"
+import { AppHeader } from "@/components/navigation/app-header"
 import type { Alarm, AlarmType } from "@/lib/types"
 
 const CITY_NAME = "Municipalidad de San Isidro"
@@ -24,21 +22,11 @@ const alarmTypes: { type: AlarmType; label: string }[] = [
 
 export default function HomePage() {
   const router = useRouter()
-  const [location, setLocation] = useState<string>("")
-  const [isLoadingLocation, setIsLoadingLocation] = useState(true)
   const [selectedAlarmType, setSelectedAlarmType] = useState<AlarmType | null>(null)
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [activeAlarm, setActiveAlarm] = useState<Alarm | null>(null)
   const unreadNewsCount = 3
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLocation("Av. San Martín 1234, Centro")
-      setIsLoadingLocation(false)
-    }, 1500)
-    return () => clearTimeout(timer)
-  }, [])
 
   const handleAlarmClick = (type: AlarmType) => {
     setSelectedAlarmType(type)
@@ -55,7 +43,6 @@ export default function HomePage() {
       id: "1",
       type: selectedAlarmType,
       status: "activa",
-      location: location || "Ubicación aproximada",
       createdAt: new Date(),
     }
 
@@ -73,23 +60,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background pb-20">
       <header className="sticky top-0 z-30 bg-card/95 backdrop-blur-sm border-b border-border safe-area-top">
-        <div className="px-3 py-2 flex items-center gap-2">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-sm font-bold leading-tight text-foreground">{CITY_NAME}</h1>
-          </div>
-          <Link
-            href="/noticias"
-            className="relative p-1.5 rounded-full hover:bg-secondary transition-colors"
-            aria-label="Noticias"
-          >
-            <Bell className="h-4 w-4 text-muted-foreground" />
-            {unreadNewsCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold flex items-center justify-center">
-                {unreadNewsCount > 9 ? "9+" : unreadNewsCount}
-              </span>
-            )}
-          </Link>
-        </div>
+        <AppHeader title="Ibis SOS" cityName={CITY_NAME} showNewsIcon unreadNewsCount={unreadNewsCount} />
       </header>
 
       <main className="px-4 py-5 space-y-5 max-w-lg mx-auto">
@@ -100,8 +71,6 @@ export default function HomePage() {
             Selecciona el tipo de emergencia para alertar al municipio.
           </p>
         </section>
-
-        <LocationBadge location={location} isLoading={isLoadingLocation} />
 
         {activeAlarm && (
           <ActiveAlarmCard alarm={activeAlarm} onOpenChat={() => router.push("/chat")} onCancel={handleCancelAlarm} />
@@ -119,12 +88,6 @@ export default function HomePage() {
                 />
               ))}
             </div>
-            <AlarmButton
-              type="otro"
-              label="Otra emergencia"
-              onClick={() => handleAlarmClick("otro")}
-              className="w-full"
-            />
           </section>
         )}
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { use } from "react"
+import { useParams } from "next/navigation"
 import { Calendar, Share2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { AppHeader } from "@/components/navigation/app-header"
@@ -27,8 +27,9 @@ Para consultas, comunicarse al 0800-123-4567 o a través de la app Ibis SOS.`,
   publishedAt: new Date(Date.now() - 3600000 * 2),
 }
 
-export default function NewsDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params)
+export default function NewsDetailPage() {
+  const params = useParams()
+  const id = params.id as string
   const news = mockNewsDetail // En producción, buscar por id
 
   const publishedDate = news.publishedAt.toLocaleDateString("es-ES", {

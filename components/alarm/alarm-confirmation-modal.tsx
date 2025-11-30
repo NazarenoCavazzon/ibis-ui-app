@@ -46,7 +46,7 @@ export function AlarmConfirmationModal({
           <DialogDescription className="text-base">
             Se enviará una alerta de{" "}
             <span className="font-semibold text-foreground">{alarmType ? typeLabels[alarmType] : "emergencia"}</span> al
-            municipio con tu ubicación actual.
+            municipio.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex-col gap-2 sm:flex-col">

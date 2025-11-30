@@ -2,13 +2,13 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, User, FileText } from "lucide-react"
+import { Home, Users, FileText } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const navItems = [
   { href: "/", icon: Home, label: "Inicio" },
+  { href: "/red", icon: Users, label: "Mi Red" },
   { href: "/reclamos", icon: FileText, label: "Reclamos" },
-  { href: "/perfil", icon: User, label: "Perfil" },
 ]
 
 export function BottomNav() {
@@ -25,8 +25,8 @@ export function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center justify-center gap-1 py-2 rounded-xl transition-colors",
-                "min-w-[70px] min-h-[56px] px-3",
+                "flex flex-col items-center justify-center gap-1 px-6 py-2 rounded-xl transition-colors",
+                "min-w-[80px] min-h-[56px]",
                 isActive
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",

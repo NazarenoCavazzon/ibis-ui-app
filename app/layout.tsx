@@ -7,19 +7,6 @@ import "./globals.css"
 const _inter = Inter({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
 
-const brand = process.env.NEXT_PUBLIC_BRAND ?? "ember"
-const brandPresets: Record<string, string> = {
-  civic: "#4F46E5",
-  forest: "#1F9E6F",
-  sunrise: "#EA9A36",
-  ember: "#E35D3A",
-}
-const customAccent = process.env.NEXT_PUBLIC_BRAND_COLOR
-const brandThemeColor = customAccent ?? brandPresets[brand] ?? "#4F46E5"
-const brandCssVars = customAccent
-  ? { "--brand-accent": customAccent } as React.CSSProperties
-  : undefined
-
 export const metadata: Metadata = {
   title: "Ibis SOS - Alarmas Ciudadanas",
   description: "Aplicación de alarmas ciudadanas para tu municipio. Reporta emergencias y recibe ayuda rápidamente.",
@@ -27,7 +14,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: brandThemeColor,
+  themeColor: "#2563eb",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -40,8 +27,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className="dark">
-      <body className="font-sans antialiased" data-brand={brand} style={brandCssVars}>
+    <html lang="es">
+      <body className="font-sans antialiased">
         {children}
         <Analytics />
       </body>
